@@ -78,7 +78,7 @@ int init(int damier[10][10])
     
 }
 
-int invertPlayer(int player)
+int opponent(int player)
 {
     if(player == NOIR)
         return BLANC;
@@ -112,6 +112,7 @@ void display(int damier[10][10]){
     }
 }
 
+//Deplace un pion
 void deplacePaws(int damier[10][10],int io,int jo,int id,int jd)
 {
     damier[id][jd]=damier[io][jo];
@@ -274,6 +275,7 @@ int movePawns(int const player,int damier[10][10], int io,int jo, int id,int jd)
         
 }
 
+//Decrit l'action associe a l'etat passe en parametre.
 void describeState(int player,int state){
     char *splayer;
     if(player==NOIR)
@@ -348,10 +350,10 @@ int main(int argc, const char * argv[]) {
      printf("%d \n", test);*/
     
     do{
-        player=invertPlayer(player);    //On change de joueur
-        display(damier);                //On affiche le damier
+        player=opponent(player);    //On change de joueur
+        display(damier);            //On affiche le damier
         
-        if (player ==BLANC)             //On affiche le joueur courant
+        if (player ==BLANC)         //On affiche le joueur courant
             printf("----------\nLes Blancs jouent.\n----------\n");
         if (player == NOIR)
             printf("----------\nLes Noirs jouent.\n----------\n");
