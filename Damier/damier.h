@@ -12,6 +12,9 @@
 #define NOIR 2
 #define DAME_NOIR 4
 #define DAME_BLANCHE 3
+//Ainsi BLANC%2 = DAME_BLANCHE%2 = 1
+//Et NOIR%2 = DAME_NOIR%2 = 0
+//On peut donc facilement reconnaitre un pion sur le damier
 
 #include <stdio.h>
 
