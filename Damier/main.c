@@ -343,15 +343,15 @@ int main(int argc, const char * argv[]) {
      damier[0][0]=0;
      test = movePawns(NOIR, damier, 1, 1, 0, 0);
      printf("%d \n", test);*/
-    damier[5][1]=3;
     
     do{
         player=invertPlayer(player);
+        display(damier);
         if (player ==BLANC)
             printf("----------\nLes Blancs jouent.\n----------\n");
         if (player == NOIR)
             printf("----------\nLes Noirs jouent.\n----------\n");
-        display(damier);
+        
         
         do{
             printf("\n\nSelection de votre pion [x y]:\n");
