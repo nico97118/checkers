@@ -142,7 +142,8 @@ int movePawns(int const player,int damier[10][10], int io,int jo, int id,int jd)
     if (damier[id][jd] != 0)
         return -2;
     //On retourne -2 si la case destination est occupée
-    if (damier[io][jo]!=player)
+    // l'opération modulo permet de garder le test valide sur les reines.
+    if (damier[io][jo]%2!=player%2)
         return -3;
     //On retourne -3 si le joueur ne selectionne pas un de ses pions
     
@@ -342,6 +343,7 @@ int main(int argc, const char * argv[]) {
      damier[0][0]=0;
      test = movePawns(NOIR, damier, 1, 1, 0, 0);
      printf("%d \n", test);*/
+    damier[5][1]=3;
     
     do{
         player=invertPlayer(player);
@@ -360,7 +362,7 @@ int main(int argc, const char * argv[]) {
             state = movePawns(player, damier, yo, xo, yd, xd);
             describeState(player,state);
         }while(state<1);
-            
+        
     
     }while(n_blanc>0 || n_noir >0);
     
