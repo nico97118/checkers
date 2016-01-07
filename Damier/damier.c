@@ -95,14 +95,15 @@ int initTest(int damier[10][10],int *player, int *n_blanc,int *n_noir)
     }
     
     //On place les pions du joueur blanc en position debut de partie
-    damier[3][1]=BLANC;
+    damier[3][0]=BLANC;
     damier[3][3]=DAME_BLANCHE;
     
     
     //De même avec les pions noir
    
-    damier[6][0]=NOIR;
+    damier[4][2]=NOIR;
     damier[6][2]=DAME_NOIR;
+    damier[8][1]=DAME_NOIR;
     
     //On a placé 20 pions blanc et 20 pions noir, on affecte donc ces valeurs a n_blanc et n_noir
     *n_blanc =2;
@@ -212,7 +213,7 @@ void deplacePaws(int damier[10][10],int io,int jo,int id,int jd)
  3 le joueur atteint l'extremité du damier et obtient une dame
  4 le joueur a mangé un pion adverse, et a atteint l'extremité, il obtient aussi une reine
  ************************************************************************************/
-int movePawns(int const player,int damier[10][10], int io,int jo, int id,int jd)
+int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo, int id,int jd)
 {
     int state=0;
     if (io <0 || io >9 ||
@@ -231,14 +232,14 @@ int movePawns(int const player,int damier[10][10], int io,int jo, int id,int jd)
     if(player ==BLANC)
     {
         //Deplacement standard : une case en diagonal vers le bas
-        if(id == io+1 && (jd == jo+1|| jd == jo-1))
+        if(!mustAttack && id == io+1 && (jd == jo+1|| jd == jo-1))
         {
             deplacePaws(damier, io, jo, id, jd);
             state= 1;
         }
         
         //Deplacement de reine : une case en diagonal vers le bas
-        else if(damier[io][jo]==DAME_BLANCHE && id == io-1 && (jd == jo+1|| jd == jo-1))
+        else if(!mustAttack && damier[io][jo]==DAME_BLANCHE && id == io-1 && (jd == jo+1|| jd == jo-1))
         {
             deplacePaws(damier, io, jo, id, jd);
             state= 1;
@@ -272,8 +273,12 @@ int movePawns(int const player,int damier[10][10], int io,int jo, int id,int jd)
             damier[io-1][jo+1]= 0;
             state= 2;
         }
-        else
-            return -10;
+        else{
+            if (mustAttack==0)
+                return -10;
+            else
+                return -11;
+        }
         //On retourne -10 si le déplacement est inadmissble.
         
         //Si le joueur Blanc atteind la ligne 9
@@ -285,14 +290,14 @@ int movePawns(int const player,int damier[10][10], int io,int jo, int id,int jd)
     {
         
         //Deplacement standard : une case en diagonal vers le haut
-        if(id == io-1 && (jd == jo+1|| jd == jo-1))
+        if(!mustAttack && id == io-1 && (jd == jo+1|| jd == jo-1))
         {
             deplacePaws(damier, io, jo, id, jd);
             state= 1;
         }
         
         //Deplacement de reine : une case en diagonal vers le bas
-        else if(damier[io][jo]==DAME_NOIR && id == io+1 && (jd == jo+1|| jd == jo-1))
+        else if(!mustAttack && damier[io][jo]==DAME_NOIR && id == io+1 && (jd == jo+1|| jd == jo-1))
         {
             deplacePaws(damier, io, jo, id, jd);
             state= 1;
@@ -355,6 +360,51 @@ int movePawns(int const player,int damier[10][10], int io,int jo, int id,int jd)
     
 }
 
+int detectAttack(int const damier[10][10],int const x,int const y,int const player)
+{
+    int ap,ad,attack=0;
+    if(player == BLANC) //ap permet de reconnaitre un pion adverse, ad une reine adverse.
+        ap=NOIR,ad=DAME_NOIR;
+    else
+        ap=BLANC,ad=DAME_BLANCHE;
+    
+    if ((damier[y+1][x+1]==ad||damier[y+1][x+1]==ap) && damier[y+2][x+2]==0)
+         attack++; //Attaque possible en bas/broite
+    if ((damier[y-1][x+1]==ad||damier[y-1][x+1]==ap) && damier[y-2][x+2]==0)
+        attack++; //Attaque possible en haut/broite
+    if ((damier[y-1][x-1]==ad||damier[y-1][x-1]==ap)&& damier[y-2][x-2]==0)
+        attack++; //Attaque possible en haut/gauche
+    if((damier[y+1][x-1]==ad||damier[y+1][x-1]==ap) && damier[y+2][x-2]==0)
+        attack++; //Attaque possible en bas/gauche
+    
+    return attack;
+}
+
+int detectAttackGlobal(int damier[10][10],int player)
+{
+    int i,j,op,od;
+    
+    if (player==BLANC)//Op permet de savoir si un pion appartient a player, od pour une dame.
+    {
+        op=BLANC;
+        od=DAME_BLANCHE;
+    }
+    else
+    {
+        op=NOIR;
+        od=DAME_NOIR;
+    }
+    
+    //On parcourt tout le damier.
+    //Quand on rencontre un pion qui nous appartient avec une attaque possible, on renvoi 1
+    for(i=0;i<10;i++)
+        for(j=0;j<10;j++)
+            if((damier[i][j]==op||damier[i][j]==od)&&detectAttack(damier, j, i, player)>0)
+                return 1;
+    //sinon 0 car aucun pion de player ne peut attaquer.
+    return 0;
+}
+
 
 //***************************************
 //* Décrit l'action associé a un etat   *
@@ -380,6 +430,9 @@ void describeState(int const player,int const state){
             break;
         case -10:
             printf("----------\nMouvement impossible\n----------\n");
+            break;
+        case -11:
+            printf("----------\nMouvement impossible,vous devez attaquer un pion\n----------\n");
             break;
         case 1:
             printf("----------\nUn pion %s avance\n----------\n",splayer);
