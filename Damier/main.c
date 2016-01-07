@@ -321,6 +321,9 @@ void describeState(int player,int state){
 
 
 int main(int argc, const char * argv[]) {
+    
+    //Initialisation des variables
+    
     int damier[10][10];
     int test;
     //le joueur courant
@@ -345,27 +348,44 @@ int main(int argc, const char * argv[]) {
      printf("%d \n", test);*/
     
     do{
-        player=invertPlayer(player);
-        display(damier);
-        if (player ==BLANC)
+        player=invertPlayer(player);    //On change de joueur
+        display(damier);                //On affiche le damier
+        
+        if (player ==BLANC)             //On affiche le joueur courant
             printf("----------\nLes Blancs jouent.\n----------\n");
         if (player == NOIR)
             printf("----------\nLes Noirs jouent.\n----------\n");
         
-        
+        //Faire:
         do{
+            //Aquisition de l'origine
             printf("\n\nSelection de votre pion [x y]:\n");
             scanf("%d %d",&xo,&yo);
+            //Aquisition de la destination
             printf("\nSelection de sa destination[x y]:\n");
             scanf("%d %d",&xd,&yd);
         
+            //On test, et si possible, effectue le déplacement.
             state = movePawns(player, damier, yo, xo, yd, xd);
+            //On décrit ce qu'il se passe.
             describeState(player,state);
-        }while(state<1);
+            
+            //Si l'etat décrit l'attaque d'un pion adverse, on inpute 1 au nb de pion de l'adversaire.
+            if(state==2 || state ==4)
+            {
+                if(player==BLANC)
+                    n_noir--;
+                else
+                    n_blanc--;
+            }
+        
+        }while(state<1);        //Tant que l'etat ne décrit pas un deplacement valide.
         
     
-    }while(n_blanc>0 || n_noir >0);
+    }while(n_blanc>0 || n_noir >0);     //Tant qu'il reste des pions blancs ou noir
     
+    //Annonce du Vainqueur
+    //....
     
     display(damier);
 }
