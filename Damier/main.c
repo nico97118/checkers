@@ -1,8 +1,8 @@
 //
 //  main.c
-//  Damier
+//  Jeu de dames | EFREI projet L1
 //
-//  Created by Nicolas Loridon on 06/01/2016.
+//  Created by Nicolas Loridon on 07/01/2016.
 //  Copyright © 2016 Nicolas Loridon. All rights reserved.
 //
 
@@ -13,7 +13,9 @@
 #define DAME_NOIR 4
 #define DAME_BLANCHE 3
 
-//Initialise le damier
+//************************
+//* Initialise le damier *
+//************************
 int init(int damier[10][10])
 {
     int i,j;
@@ -87,7 +89,9 @@ int opponent(int player)
     return -1;
 }
 
-//Affiche le damier en console
+//************************
+//* Afficher le damier   *
+//************************
 void display(int damier[10][10]){
     int i,j;
     char sym;
@@ -134,7 +138,8 @@ void deplacePaws(int damier[10][10],int io,int jo,int id,int jd)
 }
 
 
-/*MovePawns test, puis effectue un déplacement, et retourne un etat restituant l'action accomplie:
+/**********************************************************************************
+ MovePawns test, puis effectue un déplacement, et retourne un etat restituant l'action accomplie:
     -1 mouvement hors damier
     -2 case destination occupée
     -3 le pion n'appartient pas au joueur
@@ -145,7 +150,7 @@ void deplacePaws(int damier[10][10],int io,int jo,int id,int jd)
     2 le joueur a mangé un pion adverse
     3 le joueur atteint l'extremité du damier et obtient une dame
     4 le joueur a mangé un pion adverse, et a atteint l'extremité, il obtient aussi une reine
- */
+ ************************************************************************************/
 int movePawns(int const player,int damier[10][10], int io,int jo, int id,int jd)
 {
     int state=0;
@@ -289,7 +294,9 @@ int movePawns(int const player,int damier[10][10], int io,int jo, int id,int jd)
         
 }
 
-//Decrit l'action associe a l'etat passe en parametre.
+//***************************************
+//* Décrit l'action associé a un etat   *
+//***************************************
 void describeState(int player,int state){
     char *splayer;
     if(player==NOIR)
@@ -330,7 +337,9 @@ void describeState(int player,int state){
     }
 }
 
-//Sauvegarde le jeu courant.
+//*************************
+//* Sauvegarde la partie  *
+//*************************
 int save(int damier[10][10],int player,int n_blanc,int n_noir)
 {
     int i,j;
@@ -345,15 +354,17 @@ int save(int damier[10][10],int player,int n_blanc,int n_noir)
     return 1;
 }
 
-//Charge le dernier jeu sauvegardé
+//********************************
+//* Charger la derniere partie   *
+//********************************
 int load(int damier[10][10],int *player, int *n_blanc,int *n_noir)
 {
     int i,j;
     FILE* f = fopen("game.dat", "r");  //On ouvre le fichier game.dat en lecture
     if(f!= NULL){                      //Si il n'y a pas d'erreur :
         *player = fgetc(f);              //le 1er caractere designe le joueur qui avait la main
-        *n_blanc = fgetc(f);
-        *n_noir = fgetc(f);
+        *n_blanc = fgetc(f);           //le 2eme , le nombre de pions blanc restant
+        *n_noir = fgetc(f);             //le 3eme, le nombre de pions noir restant
         for(i=0;i<10;i++)
             for(j=0;j<10;j++)
                 damier[i][j]= fgetc(f); //On récupere une a une les cases du damier sauvegardées.
@@ -374,10 +385,13 @@ int load(int damier[10][10],int *player, int *n_blanc,int *n_noir)
 
 
 
-
+//*************************
+//*Fonction principale    *
+//*************************
 int main(int argc, const char * argv[]) {
     
     //Initialisation des variables
+    
     int damier[10][10];
     //le joueur courant
     int player = NOIR;
@@ -389,7 +403,9 @@ int main(int argc, const char * argv[]) {
     int state;
     int choix;
     
-    //Menu principal
+    //************************
+    //* Menu principal       *
+    //************************
     printf("***************\nJeu de Dames\n****************\n\n");
     printf("1. Nouvelle partie \n2.Charger\n");
     do{
@@ -409,7 +425,9 @@ int main(int argc, const char * argv[]) {
         }
     }while(choix<1 && choix>2);
 
-    
+    //************************
+    //* Boucle de la partie  *
+    //************************
     do{
         player=opponent(player);    //On change de joueur
         display(damier);            //On affiche le damier
