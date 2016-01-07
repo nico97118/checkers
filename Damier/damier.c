@@ -95,7 +95,7 @@ int initTest(int damier[10][10],int *player, int *n_blanc,int *n_noir)
     }
     
     //On place les pions du joueur blanc en position debut de partie
-    damier[3][0]=BLANC;
+    damier[3][1]=BLANC;
     damier[3][3]=DAME_BLANCHE;
     
     
@@ -246,28 +246,32 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
         }
         
         //Attaque Pion adverse bas/droite
-        else if(id == io+2 && jd == jo+2 && damier[io+1][jo+1]%2 == 0)
+        else if(id == io+2 && jd == jo+2 &&
+                (damier[io+1][jo+1] == NOIR || damier[io+1][jo+1] == DAME_NOIR))
         {
             deplacePaws(damier, io, jo, id, jd);
             damier[io+1][jo+1]=0;
             state= 2;
         }
         //Attaque Pion adverse bas/gauche
-        else if(id == io+2 && jd == jo-2 && damier[io+1][jo-1]%2 == 0)
+        else if(id == io+2 && jd == jo-2 &&
+                (damier[io+1][jo-1] == NOIR || damier[io+1][jo-1] == DAME_NOIR))
         {
             deplacePaws(damier, io, jo, id, jd);
             damier[io+1][jo-1]=0;
             state= 2;
         }
         //Attaque Pion adverse haut/gauche
-        else if(id == io-2 && jd == jo-2 && damier[io-1][jo-1]%2 == 0)
+        else if(id == io-2 && jd == jo-2 &&
+                (damier[io-1][jo-1] == NOIR || damier[io-1][jo-1] == DAME_NOIR))
         {
             deplacePaws(damier, io, jo, id, jd);
             damier[io-1][jo-1]=0;
             state= 2;
         }
         //Attaque Pion adverse haut/droite
-        else if(id == io-2 && jd == jo+2 && damier[io-1][jo+1]%2 == 0)
+        else if(id == io-2 && jd == jo+2
+                (damier[io-1][jo+1] == NOIR || damier[io-1][jo+1] == DAME_NOIR))
         {
             deplacePaws(damier, io, jo, id, jd);
             damier[io-1][jo+1]= 0;
@@ -304,7 +308,8 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
         }
         
         //Attaque Pion adverse bas/droite
-        else if(id == io+2 && jd == jo+2 && damier[io+1][jo+1]%2==1)
+        else if(id == io+2 && jd == jo+2 &&
+                (damier[io+1][jo+1] == BLANC || damier[io+1][jo+1] == DAME_BLANCHE))
         {
             deplacePaws(damier, io, jo, id, jd);
             damier[io+1][jo+1]=0;
@@ -312,7 +317,8 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
         }
         
         //Attaque Pion adverse bas/gauche
-        else if(id == io+2 && jd == jo-2 && damier[io+1][jo-1]%2==1)
+        else if(id == io+2 && jd == jo-2 &&
+                (damier[io+1][jo-1] == BLANC || damier[io+1][jo-1] == DAME_BLANCHE))
         {
             deplacePaws(damier, io, jo, id, jd);
             damier[io+1][jo-1]=0;
@@ -320,7 +326,8 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
         }
         
         //Attaque Pion adverse haut/gauche
-        else if(id == io-2 && jd == jo-2 && damier[io-1][jo-1]%2==1)
+        else if(id == io-2 && jd == jo-2 &&
+                (damier[io-1][jo-1] == BLANC || damier[io-1][jo-1] == DAME_BLANCHE))
         {
             deplacePaws(damier, io, jo, id, jd);
             damier[io-1][jo-1]=0;
@@ -328,7 +335,8 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
         }
         
         //Attaque Pion adverse haut/droite
-        else if(id == io-2 && jd == jo+2 && damier[io-1][jo+1]%2==1)
+        else if(id == io-2 && jd == jo+2 &&
+                (damier[io-1][jo+1] == BLANC || damier[io-1][jo+1] == DAME_BLANCHE))
         {
             deplacePaws(damier, io, jo, id, jd);
             damier[io-1][jo+1]= 0;
