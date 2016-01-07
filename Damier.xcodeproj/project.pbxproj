@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5CA103011C3DB4EF0055F276 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 5CA103001C3DB4EF0055F276 /* main.c */; };
+		5CA1030B1C3EC3AC0055F276 /* damier.c in Sources */ = {isa = PBXBuildFile; fileRef = 5CA103091C3EC3AC0055F276 /* damier.c */; };
+		5CA1030E1C3EC8060055F276 /* sauvegarde.c in Sources */ = {isa = PBXBuildFile; fileRef = 5CA1030C1C3EC8060055F276 /* sauvegarde.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,10 @@
 /* Begin PBXFileReference section */
 		5CA102FD1C3DB4EF0055F276 /* Damier */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Damier; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CA103001C3DB4EF0055F276 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; lineEnding = 2; path = main.c; sourceTree = "<group>"; };
+		5CA103091C3EC3AC0055F276 /* damier.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = damier.c; sourceTree = "<group>"; };
+		5CA1030A1C3EC3AC0055F276 /* damier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = damier.h; sourceTree = "<group>"; };
+		5CA1030C1C3EC8060055F276 /* sauvegarde.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sauvegarde.c; sourceTree = "<group>"; };
+		5CA1030D1C3EC8060055F276 /* sauvegarde.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sauvegarde.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +63,11 @@
 		5CA102FF1C3DB4EF0055F276 /* Damier */ = {
 			isa = PBXGroup;
 			children = (
+				5CA103091C3EC3AC0055F276 /* damier.c */,
+				5CA1030A1C3EC3AC0055F276 /* damier.h */,
 				5CA103001C3DB4EF0055F276 /* main.c */,
+				5CA1030C1C3EC8060055F276 /* sauvegarde.c */,
+				5CA1030D1C3EC8060055F276 /* sauvegarde.h */,
 			);
 			path = Damier;
 			sourceTree = "<group>";
@@ -119,6 +129,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5CA103011C3DB4EF0055F276 /* main.c in Sources */,
+				5CA1030E1C3EC8060055F276 /* sauvegarde.c in Sources */,
+				5CA1030B1C3EC3AC0055F276 /* damier.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
