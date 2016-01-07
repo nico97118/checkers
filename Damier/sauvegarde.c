@@ -1,7 +1,7 @@
 //
 //  sauvegarde.c
 //  Damier
-//
+//  Implementation des fonctions sauvegarde et chargement.
 //  Created by Nicolas Loridon on 07/01/2016.
 //  Copyright © 2016 Nicolas Loridon. All rights reserved.
 //

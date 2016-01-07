@@ -1,7 +1,7 @@
 //
 //  sauvegarde.h
 //  Damier
-//
+//  Gestion de sauvegarde
 //  Created by Nicolas Loridon on 07/01/2016.
 //  Copyright © 2016 Nicolas Loridon. All rights reserved.
 //
