@@ -318,12 +318,13 @@ void describeState(int player,int state){
 }
 
 //Sauvegarde le jeu courant.
-int save(int damier[10][10],int player)
+int save(int damier[10][10],int player,int n_blanc,int n_noir)
 {
     int i,j;
     FILE* f = fopen("game.dat", "w"); //On ouvre le fichier game.dat en écriture, si il n'existe pas, on le crée
     fputc(player, f);                 //On écrit le joueur qui avait la main.
-    
+    fputc(n_blanc,f);                 //On écrit le nombre de pions blanc restant
+    fputc(n_noir,f);                  //On écrit le nombre de pions noir restant
     for(i=0;i<10;i++)
         for(j=0;j<10;j++)
             fputc(damier[i][j], f);  //On écrit chaque case du tableau dans le fichier
@@ -332,19 +333,20 @@ int save(int damier[10][10],int player)
 }
 
 //Charge le dernier jeu sauvegardé
-int load(int damier[10][10])
+int load(int damier[10][10],int *player, int *n_blanc,int *n_noir)
 {
-    int player;
     int i,j;
     FILE* f = fopen("game.dat", "r");  //On ouvre le fichier game.dat en lecture
     if(f!= NULL){                      //Si il n'y a pas d'erreur :
-    player = fgetc(f);              //le 1er caractere designe le joueur qui avait la main
-    
-    for(i=0;i<10;i++)
-        for(j=0;j<10;j++)
-            damier[i][j]= fgetc(f); //On récupere une a une les cases du damier sauvegardées.
-    fclose(f);                      //Puis on ferme le fichier.
-    return player;
+        *player = fgetc(f);              //le 1er caractere designe le joueur qui avait la main
+        *n_blanc = fgetc(f);
+        *n_noir = fgetc(f);
+        for(i=0;i<10;i++)
+            for(j=0;j<10;j++)
+                damier[i][j]= fgetc(f); //On récupere une a une les cases du damier sauvegardées.
+        
+        fclose(f);                      //Puis on ferme le fichier.
+        return 1;   //On retourne 1 pour dire que tout s'est bien passé
     }
     else{
         printf("Erreur lors de l'ouverture du fichier\n");
@@ -384,8 +386,8 @@ int main(int argc, const char * argv[]) {
                 init(damier);
                 break;
             case 2:
-                player=load(damier);    //2. on charge la partie sauvegardée dernierement.
-                if(player==-1)
+                //2. on charge la partie sauvegardée dernierement.
+                if(load(damier,&player,&n_blanc,&n_noir) == -1)
                     return EXIT_FAILURE;
                 break;
             default:
@@ -429,7 +431,7 @@ int main(int argc, const char * argv[]) {
         
         }while(state<1);        //Tant que l'etat ne décrit pas un deplacement valide.
         
-        save(damier,player);    //On sauvegarde après chaque coup.(Parti pris qui peut evoluer)
+        save(damier,player,n_blanc,n_noir);    //On sauvegarde après chaque coup.(Parti pris qui peut evoluer)
     
     }while(n_blanc>0 || n_noir >0);     //Tant qu'il reste des pions blancs ou noir
     

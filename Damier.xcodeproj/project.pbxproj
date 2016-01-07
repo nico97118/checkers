@@ -24,7 +24,7 @@
 
 /* Begin PBXFileReference section */
 		5CA102FD1C3DB4EF0055F276 /* Damier */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Damier; sourceTree = BUILT_PRODUCTS_DIR; };
-		5CA103001C3DB4EF0055F276 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		5CA103001C3DB4EF0055F276 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; lineEnding = 2; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
