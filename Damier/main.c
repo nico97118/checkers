@@ -90,26 +90,39 @@ int opponent(int player)
 //Affiche le damier en console
 void display(int damier[10][10]){
     int i,j;
+    char sym;
     
     //Entete du damier
     printf("   ");
     for(i=0;i<10;i++)
-        printf("%2d ",i);
-    printf("\n  -------------------------------\n");
+        printf("%3d ",i);
+    printf("\n   -----------------------------------------\n");
     
     //Contenu du damier
     for(i=0;i<10;i++)
     {
-        printf("%2d|",i);
+        printf("%2d |",i);
         for(j=0;j<10;j++)
         {
             if(damier[i][j] != 0)
-                printf("%2d",damier[i][j]);
+            {
+                if (damier[i][j]%2==0)
+                    sym ='n';
+                else
+                    sym='b';
+                
+                if (damier[i][j]>2)
+                    printf("[%c]",sym);
+                else
+                    printf(" %c ",sym);
+                
+                
+            }
             else
-                printf("  ");
+                printf("   ");
             printf("|");
         }
-        printf("\n  -------------------------------\n");
+        printf("\n   -----------------------------------------\n");
     }
 }
 
