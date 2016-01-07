@@ -27,7 +27,7 @@ int init(int damier[10][10])
         }
     }
     
-    //On place les pions du joueur blanc en position debut de jeu
+    //On place les pions du joueur blanc en position debut de partie
     damier[0][0]=BLANC;
     damier[0][2]=BLANC;
     damier[0][4]=BLANC;
@@ -77,7 +77,7 @@ int init(int damier[10][10])
     return 1;
     
 }
-
+//Renvoi l'id de l'adversaire de player.
 int opponent(int player)
 {
     if(player == NOIR)
@@ -87,6 +87,7 @@ int opponent(int player)
     return -1;
 }
 
+//Affiche le damier en console
 void display(int damier[10][10]){
     int i,j;
     
@@ -316,18 +317,53 @@ void describeState(int player,int state){
     }
 }
 
+//Sauvegarde le jeu courant.
+int save(int damier[10][10],int player)
+{
+    int i,j;
+    FILE* f = fopen("game.dat", "w"); //On ouvre le fichier game.dat en écriture, si il n'existe pas, on le crée
+    fputc(player, f);                 //On écrit le joueur qui avait la main.
+    
+    for(i=0;i<10;i++)
+        for(j=0;j<10;j++)
+            fputc(damier[i][j], f);  //On écrit chaque case du tableau dans le fichier
+    fclose(f);                       //Puis on ferme le fichier.
+    return 1;
+}
+
+//Charge le dernier jeu sauvegardé
+int load(int damier[10][10])
+{
+    int player;
+    int i,j;
+    FILE* f = fopen("game.dat", "r");  //On ouvre le fichier game.dat en lecture
+    if(f!= NULL){                      //Si il n'y a pas d'erreur :
+    player = fgetc(f);              //le 1er caractere designe le joueur qui avait la main
+    
+    for(i=0;i<10;i++)
+        for(j=0;j<10;j++)
+            damier[i][j]= fgetc(f); //On récupere une a une les cases du damier sauvegardées.
+    fclose(f);                      //Puis on ferme le fichier.
+    return player;
+    }
+    else{
+        printf("Erreur lors de l'ouverture du fichier\n");
+        return -1;
+    }
+}
+
 //Siffler n'est pas jouer
 //Il faut écrire une fonction qui prend un argument le damier et le joueur.
 //Si player peut attaquer un pion adverse. Alors il doit attaquer l'un d'entre eux
 
 
 
+
+
 int main(int argc, const char * argv[]) {
     
     //Initialisation des variables
-    
     int damier[10][10];
-    int test;
     //le joueur courant
     int player = NOIR;
     //Le nombre de pion sur le plateau
@@ -336,18 +372,28 @@ int main(int argc, const char * argv[]) {
     int xo,yo,xd,yd;
     //variable d'etat qui permet de décrire la derniere action
     int state;
+    int choix;
     
-    
-    init(damier);
-    
-    //Quelques opérations pour tester le moteur de jeu
-    /*test = movePawns(BLANC, damier, 3,1 , 4, 0);
-     test = movePawns(BLANC, damier, 4,0 , 5, 1);
-     test = movePawns(NOIR, damier, 6,0 , 4, 2);
-     damier[1][1]=2;
-     damier[0][0]=0;
-     test = movePawns(NOIR, damier, 1, 1, 0, 0);
-     printf("%d \n", test);*/
+    //Menu principal
+    printf("***************\nJeu de Dames\n****************\n\n");
+    printf("1. Nouvelle partie \n2.Charger\n");
+    do{
+        scanf("%d",&choix);
+        switch (choix) {
+            case 1:     //1. On creer une nouvelle partie en initialisant le damier
+                init(damier);
+                break;
+            case 2:
+                player=load(damier);    //2. on charge la partie sauvegardée dernierement.
+                if(player==-1)
+                    return EXIT_FAILURE;
+                break;
+            default:
+                printf("Choix incorrect");
+                break;
+        }
+    }while(choix<1 && choix>2);
+
     
     do{
         player=opponent(player);    //On change de joueur
@@ -383,6 +429,7 @@ int main(int argc, const char * argv[]) {
         
         }while(state<1);        //Tant que l'etat ne décrit pas un deplacement valide.
         
+        save(damier,player);    //On sauvegarde après chaque coup.(Parti pris qui peut evoluer)
     
     }while(n_blanc>0 || n_noir >0);     //Tant qu'il reste des pions blancs ou noir
     
