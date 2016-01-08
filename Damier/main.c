@@ -80,10 +80,10 @@ int main(int argc, const char * argv[]) {
     
     }while(n_blanc>0 && n_noir >0);             //Tant qu'il reste des pions blancs et noir
     
-    //Annonce du Vainqueur
-    //....
-    
-    display(damier);
+    if(n_blanc>0)
+        printf("Les blancs gagnent");
+    else
+        printf("les noirs gagnent");
 }
 
 //************************

@@ -226,9 +226,9 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
     if (damier[id][jd] != 0)
         return -2;
     //On retourne -2 si la case destination est occupée
-    if (damier[io][jo]== player || damier[io][jo] == player+2)
+    if (!(damier[io][jo]== player || damier[io][jo]==player+2))
     {
-        printf("DEBUG: %d, %d",damier[io][jo],player);
+        //printf("DEBUG: %d, %d",damier[io][jo],player+2);
         return -3;
     }
     //On retourne -3 si le joueur ne selectionne pas un de ses pions
