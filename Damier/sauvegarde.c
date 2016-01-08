@@ -11,11 +11,12 @@
 //*************************
 //* Sauvegarde la partie  *
 //*************************
-int save(int const damier[10][10],int const player,int const n_blanc,int const n_noir)
+int save(int const damier[10][10],int const player,int const n_blanc,int const n_noir,int CPU)
 {
     int i,j;
     FILE* f = fopen("game.dat", "w"); //On ouvre le fichier game.dat en écriture, si il n'existe pas, on le crée
     fputc(player, f);                 //On écrit le joueur qui avait la main.
+    fputc(CPU,f);                     //On écrit si l'user jouait contre l'ordi
     fputc(n_blanc,f);                 //On écrit le nombre de pions blanc restant
     fputc(n_noir,f);                  //On écrit le nombre de pions noir restant
     for(i=0;i<10;i++)
@@ -28,12 +29,13 @@ int save(int const damier[10][10],int const player,int const n_blanc,int const n
 //********************************
 //* Charger la derniere partie   *
 //********************************
-int load(int damier[10][10],int *player, int *n_blanc,int *n_noir)
+int load(int damier[10][10],int *player, int *n_blanc,int *n_noir,int *CPU)
 {
     int i,j;
     FILE* f = fopen("game.dat", "r");  //On ouvre le fichier game.dat en lecture
     if(f!= NULL){                      //Si il n'y a pas d'erreur :
         *player = fgetc(f);              //le 1er caractere designe le joueur qui avait la main
+        *CPU = fgetc(f);
         *n_blanc = fgetc(f);           //le 2eme , le nombre de pions blanc restant
         *n_noir = fgetc(f);             //le 3eme, le nombre de pions noir restant
         for(i=0;i<10;i++)

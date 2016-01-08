@@ -217,7 +217,9 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
 {
     int state=0;
     if (io <0 || io >9 ||
-        id <0 || id >9)
+        id <0 || id >9||
+        jo <0 || jo >9||
+        jd <0 || jd >9)
         return -1;
     //On retourne -1 si le mouvement est hors du damier
     
@@ -270,7 +272,7 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
             state= 2;
         }
         //Attaque Pion adverse haut/droite
-        else if(id == io-2 && jd == jo+2
+        else if(id == io-2 && jd == jo+2 &&
                 (damier[io-1][jo+1] == NOIR || damier[io-1][jo+1] == DAME_NOIR))
         {
             deplacePaws(damier, io, jo, id, jd);

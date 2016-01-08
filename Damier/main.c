@@ -8,9 +8,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "damier.h"
+//#include "damier.h"
 #include "sauvegarde.h"
-
+#include "CPU.h"
 
 
 //Siffler n'est pas jouer
@@ -19,8 +19,9 @@
 
 
 //Prototype du menu implementé sous la fonction main()
-int menu(int damier[10][10],int *player, int *n_blanc,int *n_noir);
+int menu(int damier[10][10],int *player, int *n_blanc,int *n_noir,int *CPU);
 int play(int damier[10][10],int const player,int attack);
+int menuNewGame();
 
 //*************************
 //*Fonction principale    *
@@ -35,11 +36,12 @@ int main(int argc, const char * argv[]) {
     //Le nombre de pion sur le plateau
     int n_blanc,n_noir;
     //variable d'etat qui permet de décrire la derniere action
-    int state,mustAttack;
+    int CPU=0,state,mustAttack;
     
     //Menu principale
-    menu(damier, &player,&n_noir,&n_blanc);
-
+    if(menu(damier, &player,&n_noir,&n_blanc,&CPU)==10)
+        CPU=1;
+    
     //************************
     //* Boucle de la partie  *
     //************************
@@ -58,7 +60,10 @@ int main(int argc, const char * argv[]) {
             mustAttack=detectAttackGlobal(damier, player);
             
             //Le joueur courant fait son coup
-            state = play(damier, player,mustAttack);
+            if(player==BLANC||(player==NOIR && CPU==0))
+                state = play(damier, player,mustAttack);
+            else
+                state = playCPU(damier, player, mustAttack);
             
             //On décrit ce qu'il se passe.
             describeState(player,state);
@@ -71,7 +76,7 @@ int main(int argc, const char * argv[]) {
             refreshCounter(damier,&n_blanc,&n_noir);
         }
         player=opponent(player);                //On change de joueur
-        save(damier,player,n_blanc,n_noir);     //On sauvegarde après chaque coup.(peut evoluer)
+        save(damier,player,n_blanc,n_noir,CPU);     //On sauvegarde après chaque coup.(peut evoluer)
     
     }while(n_blanc>0 && n_noir >0);             //Tant qu'il reste des pions blancs et noir
     
@@ -84,7 +89,7 @@ int main(int argc, const char * argv[]) {
 //************************
 //* Menu principal       *
 //************************
-int menu(int damier[10][10],int *player, int *n_blanc,int *n_noir)
+int menu(int damier[10][10],int *player, int *n_blanc,int *n_noir,int *CPU)
 {
     int choix;
     
@@ -95,11 +100,13 @@ int menu(int damier[10][10],int *player, int *n_blanc,int *n_noir)
         switch (choix) {
             case 1:     //1. On creer une nouvelle partie en initialisant le damier
                 init(damier,player,n_blanc,n_noir);
+                if(menuNewGame()==2)
+                    return 10;
                 return 1;
                 break;
             case 2:
                 //2. on charge la partie sauvegardée dernierement.
-                if(load(damier,player,n_blanc,n_noir) == -1)
+                if(load(damier,player,n_blanc,n_noir,CPU) == -1)
                     return EXIT_FAILURE;
                 return 2;
                 break;
@@ -115,6 +122,29 @@ int menu(int damier[10][10],int *player, int *n_blanc,int *n_noir)
     
     return 0;
 }
+
+int menuNewGame()
+{
+    
+    int choix;
+    do{
+    printf("Jouer contre :\n\n1.Humain\n2.CPU\n");
+    scanf("%d",&choix);
+    switch (choix) {
+        case 1:
+            return 1;
+            break;
+        case 2:
+            return 2;
+            break;
+        default:
+            printf("Choix incorrect\n");
+            break;
+    }
+    }while(!(choix==1||choix==2));
+    return -1;
+}
+
 
 //*********************************************
 //* Play permet a "player" de tenter son coup *
@@ -153,7 +183,7 @@ int play(int damier[10][10],int const player,int attack)
                 xo=xd;
                 yo=yd;
             }
-            printf("**Rafle**\nVous jouez le pion en [%d %d]\n",xo,yo);
+            printf("***\nVous jouez le pion en [%d %d]\n***\n",xo,yo);
             
             //Trace pour debug
             //printf("detectattack :%d -*- state: %d \n",detectAttack(damier, xd, yd, player),state);

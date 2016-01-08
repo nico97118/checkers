@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 
-int save(int const damier[10][10],int const player,int const n_blanc,int const n_noir);
-int load(int damier[10][10],int *player, int *n_blanc,int *n_noir);
+int save(int const damier[10][10],int const player,int const n_blanc,int const n_noir,int CPU);
+int load(int damier[10][10],int *player, int *n_blanc,int *n_noir,int *CPU);
 
 #endif /* sauvegarde_h */
