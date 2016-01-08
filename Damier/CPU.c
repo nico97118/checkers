@@ -35,6 +35,7 @@ int playCPU(int damier[10][10],int player,int attack)
         }
         if (state>0)
             break;
+        
     }
     //On a tenté toutes les attaques possibles.
     
