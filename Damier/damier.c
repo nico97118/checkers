@@ -107,7 +107,7 @@ int initTest(int damier[10][10],int *player, int *n_blanc,int *n_noir)
     
     //On a placé 20 pions blanc et 20 pions noir, on affecte donc ces valeurs a n_blanc et n_noir
     *n_blanc =2;
-    *n_noir=2;
+    *n_noir=3;
     
     //Les blanc commencent
     *player=BLANC;
@@ -211,7 +211,7 @@ void deplacePaws(int damier[10][10],int io,int jo,int id,int jd)
  1 le pion a avancé
  2 le joueur a mangé un pion adverse
  3 le joueur atteint l'extremité du damier et obtient une dame
- 4 le joueur a mangé un pion adverse, et a atteint l'extremité, il obtient aussi une reine
+ 4 le joueur a mangé un pion adverse, et a atteint l'extremité, il obtient aussi une dame
  ************************************************************************************/
 int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo, int id,int jd)
 {
@@ -226,9 +226,11 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
     if (damier[id][jd] != 0)
         return -2;
     //On retourne -2 si la case destination est occupée
-    // l'opération modulo permet de garder le test valide sur les reines.
-    if (damier[io][jo]%2!=player%2)
+    if (damier[io][jo]== player || damier[io][jo] == player+2)
+    {
+        printf("DEBUG: %d, %d",damier[io][jo],player);
         return -3;
+    }
     //On retourne -3 si le joueur ne selectionne pas un de ses pions
     
     if(player ==BLANC)
@@ -345,7 +347,12 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
             state= 2;
         }
         else
-            return -10;
+        {
+            if(mustAttack==0)
+                return -10;
+            else
+                return -11;
+        }
         //On retourne -10 si le déplacement est inadmissble
         
         //Si le joueur NOIR atteint la ligne 0, il obtiendra une REINE_NOIR
@@ -363,7 +370,6 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
     if(state>2 && player == NOIR)
         damier[id][jd]=DAME_NOIR;
     if(state>2 && player ==BLANC)
-        
         damier[id][jd]=DAME_BLANCHE;
     //On renvoi l'etat restituant l'action accomplie
     return state;
@@ -448,7 +454,7 @@ void describeState(int const player,int const state){
             printf("----------\nUn pion %s avance\n----------\n",splayer);
             break;
         case 2:
-            printf("----------\nUn pion %s et mange un pion adverse.\n----------\n",splayer);
+            printf("----------\nUn pion %s avance et mange un pion adverse.\n----------\n",splayer);
             break;
         case 3:
             printf("----------\nJoueur %s obtient une reine.\n----------\n",splayer);

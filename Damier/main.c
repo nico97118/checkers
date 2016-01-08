@@ -118,7 +118,7 @@ int menu(int damier[10][10],int *player, int *n_blanc,int *n_noir,int *CPU)
                 printf("Choix incorrect\n\n");
                 break;
         }
-    }while(!(choix==1||choix==2));
+    }while(!(choix==1||choix==2||choix==3));
     
     return 0;
 }
