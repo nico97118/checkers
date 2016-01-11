@@ -95,15 +95,17 @@ int initTest(int damier[10][10],int *player, int *n_blanc,int *n_noir)
     }
     
     //On place les pions du joueur blanc en position debut de partie
-    damier[3][1]=BLANC;
+    damier[3][1]=DAME_BLANCHE;
+    damier[2][8]=DAME_BLANCHE;
     damier[3][3]=DAME_BLANCHE;
     
     
     //De même avec les pions noir
    
-    damier[4][2]=NOIR;
-    damier[6][2]=DAME_NOIR;
-    damier[8][1]=DAME_NOIR;
+    damier[1][9]=NOIR;
+    damier[4][0]=NOIR;
+    damier[3][9]=DAME_NOIR;
+    damier[8][8]=DAME_NOIR;
     
     //On a placé 20 pions blanc et 20 pions noir, on affecte donc ces valeurs a n_blanc et n_noir
     *n_blanc =2;
@@ -215,13 +217,23 @@ void deplacePaws(int damier[10][10],int io,int jo,int id,int jd)
  ************************************************************************************/
 int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo, int id,int jd)
 {
-    int state=0;
+    
+    int state=0,compteur=0,vj=0,vi=0;
     if (io <0 || io >9 ||
         id <0 || id >9||
         jo <0 || jo >9||
         jd <0 || jd >9)
         return -1;
     //On retourne -1 si le mouvement est hors du damier
+    
+    if(jd-jo <0)
+        vj=10+jd-jo;
+    else if(jd-jo>0)
+        vj=jd-jo-10;
+    else
+        vj=jd;
+    
+    
     
     if (damier[id][jd] != 0)
         return -2;
@@ -236,33 +248,49 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
     if(player ==BLANC)
     {
         //Deplacement standard : une case en diagonal vers le bas
-        if(!mustAttack && id == io+1 && (jd == jo+1|| jd == jo-1))
+        if(!mustAttack && id == io+1 && (abs(vj)==1))
         {
             deplacePaws(damier, io, jo, id, jd);
             state= 1;
         }
         
-        //Deplacement de reine : une case en diagonal vers le bas
-        else if(!mustAttack && damier[io][jo]==DAME_BLANCHE && id == io-1 && (jd == jo+1|| jd == jo-1))
+        //Deplacement de reine
+        else if(damier[io][jo]==DAME_BLANCHE &&
+                (abs(jd-jo)==abs(id-io)||abs(vj)==abs(id-io)))
         {
+            compteur=attackOnDiag(damier, player, io, id, jo, jd);
+            if(compteur ==-1)
+                return -10;
+            else if(compteur == 0)
+                state= 1;
+            else
+                state=2;
+            
             deplacePaws(damier, io, jo, id, jd);
-            state= 1;
         }
         
         //Attaque Pion adverse bas/droite
-        else if(id == io+2 && jd == jo+2 &&
-                (damier[io+1][jo+1] == NOIR || damier[io+1][jo+1] == DAME_NOIR))
+        else if(id == io+2 && vj==2 &&
+                (damier[io+1][jo+1] == NOIR || damier[io+1][jo+1] == DAME_NOIR ||
+                 damier[id-1][jd-1] == NOIR || damier[id-1][jd-1] == DAME_NOIR))
         {
             deplacePaws(damier, io, jo, id, jd);
-            damier[io+1][jo+1]=0;
+            if(jo+1<=9)
+                damier[io+1][jo+1]=0;
+            else
+                damier[io+1][jd-1]=0;
             state= 2;
         }
         //Attaque Pion adverse bas/gauche
-        else if(id == io+2 && jd == jo-2 &&
-                (damier[io+1][jo-1] == NOIR || damier[io+1][jo-1] == DAME_NOIR))
+        else if(id == io+2 && vj==-2 &&
+                (damier[io+1][jo-1] == NOIR || damier[io+1][jo-1] == DAME_NOIR ||
+                 damier[id-1][jd+1] == NOIR || damier[id-1][jd+1]==DAME_NOIR) )
         {
             deplacePaws(damier, io, jo, id, jd);
-            damier[io+1][jo-1]=0;
+            if(jo-1>=0)
+                damier[io+1][jo-1]=0;
+            else
+                damier[io+1][jd+1]=0;
             state= 2;
         }
         //Attaque Pion adverse haut/gauche
@@ -298,14 +326,15 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
     {
         
         //Deplacement standard : une case en diagonal vers le haut
-        if(!mustAttack && id == io-1 && (jd == jo+1|| jd == jo-1))
+        if(!mustAttack && id == io-1 && (abs(vj)==1))
         {
             deplacePaws(damier, io, jo, id, jd);
             state= 1;
         }
         
         //Deplacement de reine : une case en diagonal vers le bas
-        else if(!mustAttack && damier[io][jo]==DAME_NOIR && id == io+1 && (jd == jo+1|| jd == jo-1))
+        else if(damier[io][jo]==DAME_NOIR &&
+                (abs(jd-jo)==abs(id-io)||abs(vj)==abs(id-io)))
         {
             deplacePaws(damier, io, jo, id, jd);
             state= 1;
@@ -374,6 +403,38 @@ int movePawns(int const player,int damier[10][10],int mustAttack, int io,int jo,
     //On renvoi l'etat restituant l'action accomplie
     return state;
     
+}
+
+int attackOnDiag(int damier[10][10], int const player, int io,int id,int jo,int jd)
+{
+    int i,j,deltai,deltaj,vj,compteur=0;
+    if(jd-jo <0)
+        vj=10+jd-jo;
+    else if(jd-jo!=id-io)
+        vj=jd-jo-10;
+    else
+        vj = jd-jo;
+    
+    if(vj<0)
+        deltaj=-1;
+    else
+        deltaj=1;
+    
+    if(id-jo>0)
+        deltai=1;
+    else
+        deltai=-1;
+        
+    for(i=deltai,j=deltaj;j!=vj;i=i+deltai,j=j+deltaj)
+        if (damier[(io+i)%10][(jo+j)%10]==player||damier[(io+i)%10][(jo+j)%10]==player+2)
+            return -1;
+    
+    for(i=deltai,j=deltaj;j!=vj;i=i+deltai,j=j+deltaj)
+        if (damier[(io+i)%10][(jo+j)%10]== opponent(player)||damier[(io+i)%10][(jo+j)%10]==opponent(player)+2){
+            damier[(io+i)%10][(jo+i)%10] = 0;
+            compteur++;
+        }
+    return compteur;
 }
 
 int detectAttack(int const damier[10][10],int const x,int const y,int const player)

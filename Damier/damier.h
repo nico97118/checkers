@@ -13,8 +13,8 @@
 #define DAME_NOIR 4
 #define DAME_BLANCHE 3
 
-
 #include <stdio.h>
+#include <math.h>
 
 int init(int damier[10][10],int *player, int *n_blanc,int *n_noir);
 int initTest(int damier[10][10],int *player, int *n_blanc,int *n_noir);
@@ -26,5 +26,6 @@ void describeState(int const player,int const state);
 void refreshCounter(int const damier[10][10],int *n_blanc,int *n_noir);
 int detectAttack(int const damier[10][10],int const x,int const y,int const player);
 int detectAttackGlobal(int damier[10][10],int player);
+int attackOnDiag(int damier[10][10], int const player, int io,int id,int jo, jd);
 
 #endif /* damier_h */

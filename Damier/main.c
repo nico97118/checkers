@@ -13,6 +13,8 @@
 #include "CPU.h"
 
 
+
+
 //Siffler n'est pas jouer
 //Il faut écrire une fonction qui prend un argument le damier et le joueur.
 //Si player peut attaquer un pion adverse. Alors il doit attaquer l'un d'entre eux
